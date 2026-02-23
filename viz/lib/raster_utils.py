@@ -9,12 +9,17 @@ from pathlib import Path
 import numpy as np
 import streamlit as st
 
+LOBLOLLY_DATA_DIR = Path(
+    os.environ.get(
+        "LOBLOLLY_DATA_DIR",
+        str(Path(__file__).resolve().parents[2] / "data" / "fia_bigmap"),
+    )
+)
 LOBLOLLY_RASTER = os.environ.get(
     "LOBLOLLY_RASTER",
-    str(Path(__file__).resolve().parents[2] / "data" / "fia_bigmap"
-        / "Hosted_AGB_0131_2018_LOBLOLLY_PINE_06062023002031.tif"),
+    str(LOBLOLLY_DATA_DIR / "Hosted_AGB_0131_2018_LOBLOLLY_PINE_06062023002031.tif"),
 )
-OVERLAY_DIR = Path(__file__).resolve().parents[2] / "data" / "fia_bigmap"
+OVERLAY_DIR = LOBLOLLY_DATA_DIR
 VA_CLIP_PATH = OVERLAY_DIR / "loblolly_va_4326_100m.tif"
 OVERLAY_PNG = OVERLAY_DIR / "loblolly_va_overlay_greens.png"
 OVERLAY_BOUNDS = OVERLAY_DIR / "loblolly_va_bounds.json"

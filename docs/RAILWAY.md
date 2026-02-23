@@ -21,13 +21,13 @@ This guide gets you to **one shareable link** for the Streamlit app (and optiona
 1. In the same project, click **+ New** → **GitHub Repo** (or **Empty Service** if you prefer to connect the repo later).
 2. If you chose GitHub Repo, select your `va_woods` repo. If you chose Empty Service, open the service → **Settings** → **Source** and connect the repo.
 3. Open the new service → **Settings**:
-   - **Root Directory:** set to `ml` (so Railway builds from the `ml/` folder and uses `ml/Dockerfile`).
-   - **Watch Paths:** set to `ml/**` so only changes under `ml/` trigger redeploys.
+  - **Root Directory:** set to `ml` (so Railway builds from the `ml/` folder and uses `ml/Dockerfile`).
+  - **Watch Paths:** set to `ml/`** so only changes under `ml/` trigger redeploys.
 4. **Variables:**
-   - Add a variable and use **Reference** (or “Add variable from another service”):
-     - Name: `DATABASE_URL`
-     - Value: reference your Postgres service’s `DATABASE_URL` (e.g. `${{postgres.DATABASE_URL}}` — the exact name depends on how you named the Postgres service).
-   - Railway sets `PORT`; the ML Dockerfile is set up to use it (default 8000).
+  - Add a variable and use **Reference** (or “Add variable from another service”):
+    - Name: `DATABASE_URL`
+    - Value: reference your Postgres service’s `DATABASE_URL` (e.g. `${{postgres.DATABASE_URL}}` — the exact name depends on how you named the Postgres service).
+  - Railway sets `PORT`; the ML Dockerfile is set up to use it (default 8000).
 5. **Networking:** open **Settings** → **Networking** → **Generate Domain** so the ML API gets a public URL (e.g. `https://ml-production-xxxx.up.railway.app`). Copy this URL; the Viz service will need it as `ML_API_URL`.
 6. Deploy (or trigger a deploy). Fix any build errors (e.g. missing system deps in `ml/Dockerfile`).
 
@@ -35,11 +35,11 @@ This guide gets you to **one shareable link** for the Streamlit app (and optiona
 
 1. In the same project, click **+ New** → **GitHub Repo** again (or **Empty Service** and connect the same repo).
 2. Open the new service → **Settings**:
-   - **Root Directory:** set to `viz`.
-   - **Watch Paths:** set to `viz/**`.
+  - **Root Directory:** set to `viz`.
+  - **Watch Paths:** set to `viz/`**.
 3. **Variables:**
-   - `DATABASE_URL`: reference the same Postgres `DATABASE_URL` as in step 2 (e.g. `${{postgres.DATABASE_URL}}`).
-   - `ML_API_URL`: set to the **ML service’s public URL** from step 2 (e.g. `https://ml-production-xxxx.up.railway.app`). No trailing slash.
+  - `DATABASE_URL`: reference the same Postgres `DATABASE_URL` as in step 2 (e.g. `${{postgres.DATABASE_URL}}`).
+  - `ML_API_URL`: set to the **ML service’s public URL** from step 2 (e.g. `https://ml-production-xxxx.up.railway.app`). No trailing slash.
 4. **Networking:** **Generate Domain** for this service. This is the **link you share** (e.g. `https://viz-production-xxxx.up.railway.app`).
 5. Deploy. The Streamlit app should be available at the generated domain.
 
@@ -47,13 +47,12 @@ This guide gets you to **one shareable link** for the Streamlit app (and optiona
 
 The hosted Postgres starts empty. To see parcels and use the app as intended, run ingestion and dbt **once** against the hosted database.
 
-1. **Get the public Postgres URL**  
-   Postgres service → **Variables** (or **Connect**). Use the URL that’s reachable from your machine (often labeled for “Public network” or “External”). It should look like:
+1. **Get the public Postgres URL**
+  Postgres service → **Variables** (or **Connect**). Use the URL that’s reachable from your machine (often labeled for “Public network” or “External”). It should look like:
    `postgresql://postgres:...@...railway.app:5432/railway`
-
 2. **From your laptop** (with the repo and Python/venv set up):
-   ```bash
-   export DATABASE_URL="postgresql://..."   # paste the Railway Postgres URL
+  ```bash
+   export DATABASE_URL="postgresql://postgres:qavLEQAThzyuvlgtZYVkKIMqxKNGXGYV@gondola.proxy.rlwy.net:37932/railway"   # paste the Railway Postgres URL
 
    # Ingestion (run from repo root or ingestion dir)
    cd ingestion && pip install -r requirements.txt
@@ -63,11 +62,14 @@ The hosted Postgres starts empty. To see parcels and use the app as intended, ru
 
    # Transform
    cd ../transform && pip install dbt-postgres
-   export DBT_HOST=... DBT_USER=... DBT_PASSWORD=... DBT_DBNAME=...  # from same URL
+   export DBT_HOST="gondola.proxy.rlwy.net"
+   export DBT_PORT="37932"
+   export DBT_USER="postgres"
+   export DBT_PASSWORD="qavLEQAThzyuvlgtZYVkKIMqxKNGXGYV"
+   export DBT_DBNAME="railway"
    dbt run && dbt test
-   ```
+  ```
    Use the host/user/password/dbname from `DATABASE_URL` for the dbt profile.
-
 3. After this, refresh the Streamlit app; maps and data should appear.
 
 If you don’t run ingestion/dbt, the app will still run but parcel layers and some features may be empty or show errors until the DB has the expected tables.
@@ -75,19 +77,21 @@ If you don’t run ingestion/dbt, the app will still run but parcel layers and s
 ## 5. Share the link
 
 - **App (share this):**  
-  Viz service → **Settings** → **Networking** → your generated domain, e.g. `https://viz-production-xxxx.up.railway.app`
+Viz service → **Settings** → **Networking** → your generated domain, e.g. `https://viz-production-xxxx.up.railway.app`
 - **API (optional):**  
-  ML service domain, e.g. `https://ml-production-xxxx.up.railway.app`  
-  You can add both to your README “For evaluators” section.
+ML service domain, e.g. `https://ml-production-xxxx.up.railway.app`  
+You can add both to your README “For evaluators” section.
 
 ## Troubleshooting
 
-| Issue | What to try |
-|-------|-------------|
-| Viz shows “connection refused” or ML errors | Ensure `ML_API_URL` on the Viz service is exactly the ML service’s public URL (https, no trailing slash). |
-| Empty maps / no parcels | Run ingestion and dbt against the Railway `DATABASE_URL` (see step 4). |
-| Build fails (e.g. GDAL) | The `ml/Dockerfile` installs `libgdal-dev`; if something else is missing, add it in the Dockerfile and redeploy. |
-| App sleeps / cold start | On the free tier, services may sleep; first load can be slow. Upgrade or use a cron ping if you need always-on. |
+
+| Issue                                       | What to try                                                                                                      |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Viz shows “connection refused” or ML errors | Ensure `ML_API_URL` on the Viz service is exactly the ML service’s public URL (https, no trailing slash).        |
+| Empty maps / no parcels                     | Run ingestion and dbt against the Railway `DATABASE_URL` (see step 4).                                           |
+| Build fails (e.g. GDAL)                     | The `ml/Dockerfile` installs `libgdal-dev`; if something else is missing, add it in the Dockerfile and redeploy. |
+| App sleeps / cold start                     | On the free tier, services may sleep; first load can be slow. Upgrade or use a cron ping if you need always-on.  |
+
 
 ## Cost
 

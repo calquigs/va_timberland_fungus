@@ -68,6 +68,8 @@ services:
     environment:
       DATABASE_URL: postgresql://va_woods:va_woods_dev@postgres:5432/va_woods
       ML_API_URL: http://ml:8000
+      ENV_RASTER_DIR: /app/data/environmental
+      LOBLOLLY_DATA_DIR: /app/data/fia_bigmap
     volumes:
       - ./data:/app/data:ro
       - ./viz/pages:/app/pages
