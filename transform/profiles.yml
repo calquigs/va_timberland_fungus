@@ -1,0 +1,15 @@
+# dbt profile. Use env var for credentials in CI/Docker:
+# DBT_DATABASE_URL or DATABASE_URL
+
+va_woods:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'localhost') }}"
+      port: "{{ env_var('DBT_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_USER', 'va_woods') }}"
+      password: "{{ env_var('DBT_PASSWORD', '') }}"
+      dbname: "{{ env_var('DBT_DBNAME', 'va_woods') }}"
+      schema: staging
+      threads: 4

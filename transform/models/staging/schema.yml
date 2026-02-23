@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_va_parcels
+    description: Staging view of VA parcels
+    columns:
+      - name: id
+        tests: [unique]
+      - name: geom
+        tests: [not_null]
+
+  - name: stg_fia_loblolly
+    description: Staging view of FIA Loblolly biomass
+    columns:
+      - name: id
+        tests: [unique]
+      - name: geom
+        tests: [not_null]
+
+  - name: stg_parcel_loblolly_stats
+    description: Per-parcel loblolly biomass zonal statistics
+    columns:
+      - name: parcel_objectid
+        tests: [unique, not_null]
+
+  - name: stg_otu_sites
+    description: OTU sample sites with geometry
+    columns:
+      - name: site_id
+        tests: [unique, not_null]
+
+  - name: stg_otu_observations
+    description: OTU abundance observations
+    columns:
+      - name: id
+        tests: [unique, not_null]
+
+  - name: env_at_points
+    description: Environmental variables sampled at point locations

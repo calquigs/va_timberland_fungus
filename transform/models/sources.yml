@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw tables loaded by ingestion
+    schema: raw
+    tables:
+      - name: va_parcels
+        description: Virginia parcel boundaries and attributes
+      - name: va_harvests
+        description: Virginia timber harvest notification points (VOF)
+      - name: fia_loblolly_biomass
+        description: FIA BIGMAP Loblolly Pine biomass (vector or raster-derived)
+      - name: parcel_loblolly_stats
+        description: Per-parcel loblolly biomass zonal statistics (mean, total, pixel count)
+      - name: target_parcels
+        description: User-marked target parcels for inoculation (parcel_objectid, marked_at)
+      - name: otu_sites
+        description: OTU upload sites (site_id, lat, lon, uploaded_at)
+      - name: otu_observations
+        description: Individual OTU abundance observations per site
+      - name: env_point_samples
+        description: Environmental variables sampled at point locations (OTU sites + parcel centroids)
+      - name: protected_lands
+        description: VA DCR Conservation Lands (public/private protective management areas)
+      - name: model_runs
+        description: Model training run metadata (metrics, timestamps)
+  - name: staging
+    description: Staging tables/views
+    schema: staging
+    tables:
+      - name: va_harvested_timber_parcels
+        description: Parcels that intersect harvest points (actively harvested timber land)

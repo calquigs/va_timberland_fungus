@@ -1,0 +1,35 @@
+# dbt project: VA Woods transformations
+# Runs against PostGIS (PostgreSQL). All spatial tables in same DB.
+
+name: 'va_woods'
+version: '1.0.0'
+config-version: 2
+
+profile: 'va_woods'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  raw_schema: raw
+  staging_schema: staging
+  marts_schema: marts
+
+models:
+  va_woods:
+    raw:
+      +schema: raw
+      +materialized: table
+    staging:
+      +schema: staging
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table
