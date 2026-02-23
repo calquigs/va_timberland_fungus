@@ -7,7 +7,7 @@ A data engineering portfolio project for **predicting soil fungal communities** 
 - **Data engineering showcase**: Extract → Transform → QA/QC → Serve, with clear layers and tooling.
 - **Spatial + tabular**: Virginia parcels, USFS FIA (Loblolly biomass), environmental rasters, protected lands, and user-uploaded OTU tables.
 - **ML in the loop**: Train an XGBoost model on OTU + environment; predict community at any point; manual retrain trigger.
-- **Operational**: Docker-based, cloud-deployable, with documented decisions.
+- **Operational**: Docker-based for local development, with documented decisions.
 
 ## High-Level Architecture
 
@@ -121,7 +121,7 @@ See `docs/adr/` for:
 - **ADR-001**: PostGIS as central spatial store
 - **ADR-002**: dbt for SQL transformations and testing
 - **ADR-003**: Separate ML service with manual retrain trigger
-- **ADR-004**: Docker Compose for local dev; same images for cloud
+- **ADR-004**: Docker Compose for local development
 
 ## Repository Layout
 

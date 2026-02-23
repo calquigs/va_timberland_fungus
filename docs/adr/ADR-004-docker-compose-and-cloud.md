@@ -1,4 +1,4 @@
-# ADR-004: Docker Compose for Local Dev; Same Images for Cloud
+# ADR-004: Docker Compose for Local Development
 
 ## Status
 
@@ -6,16 +6,15 @@ Accepted.
 
 ## Context
 
-We need a consistent way to run PostGIS, ingestion jobs, dbt, ML service, and web app locally and in the cloud.
+We need a consistent way to run PostGIS, ingestion jobs, dbt, ML service, and web app locally.
 
 ## Decision
 
-- **Docker Compose** for local development: one compose file (or override) that brings up PostGIS, object store (e.g. MinIO), ML API, web app, and optional ingestion/worker containers.
-- **Same Docker images** used in cloud (e.g. ECS, GKE, or Cloud Run): build once, push to registry; orchestration (Compose vs Kubernetes) is the only difference.
-- **Secrets and config**: Use env files (e.g. `.env`) for local; cloud uses managed secrets and env config.
+- **Docker Compose** for local development: one compose file that brings up PostGIS, object store (MinIO), tile server (Martin), ML API, and Streamlit viz.
+- **Secrets and config**: Use `.env` file or environment variables; defaults work out of the box (see `.env.example`).
 
 ## Consequences
 
-- **Pros**: “Runs on my machine” matches “runs in cloud”; portfolio demonstrates containerization and deployability.
-- **Cons**: Compose is not production orchestration; for production we’d add a second compose or K8s manifests.
-- **Mitigation**: Document “local: docker-compose up”; “cloud: use these images with your orchestrator.”
+- **Pros**: One-command startup (`docker compose up`); consistent environments; evaluators can run the full stack without installing dependencies individually.
+- **Cons**: Requires Docker and Docker Compose installed locally.
+- **Mitigation**: Document prerequisites in README; provide a non-Docker path for viz (pip + streamlit run).

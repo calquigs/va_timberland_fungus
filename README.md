@@ -6,17 +6,20 @@ A **data engineering portfolio project** for predicting soil fungal communities 
 
 - **Data engineering**: Extract → Transform (SQL + Python + dbt) → QA/QC → Serve.
 - **Spatial + ML**: Parcels, FIA overlay, env vars; OTU uploads; manual retrain; predict at (lat, lon).
-- **Deployable**: Docker Compose for local dev; same images for cloud.
+- **Local-first**: Docker Compose to run the full stack on your machine.
 
 ## For evaluators (quick access)
 
-- **Run the app locally (Docker):**  
-  `docker compose up -d postgres && docker compose up ml viz`  
-  Then open: **Map** http://localhost:8502 · **API** http://localhost:8000  
-  (Ingestion + dbt are optional; without them the UI runs but parcel layers need data—see Quick start below.)
-- **Live demo (if hosted):** *(After deploying to Railway, add your Viz URL here, e.g. https://viz-production-xxxx.up.railway.app)*
-- **Deploy to Railway (one shareable link):** See [docs/RAILWAY.md](docs/RAILWAY.md) for step-by-step instructions.
-- **Other deployment options:** See [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) for GitHub-only vs other cloud hosting.
+**Prerequisites:** Docker & Docker Compose, Git. Optional: Python 3.10+ for running ingestion/dbt/viz outside Docker.
+
+```bash
+git clone <repo-url> && cd va_woods
+docker compose up -d postgres && docker compose up ml viz
+```
+
+Then open: **Map** http://localhost:8502 · **API** http://localhost:8000
+
+Ingestion + dbt are optional; without them the UI runs but parcel layers and derived tables will be empty. See Quick start below for details.
 
 ## Repository layout
 
@@ -26,9 +29,9 @@ A **data engineering portfolio project** for predicting soil fungal communities 
 | **ingestion/** | Scripts: VA parcels, FIA BIGMAP, environmental rasters; OTU upload is in ML API |
 | **transform/** | dbt: staging + marts (parcels classified, env at OTU sites) |
 | **qa/** | Automated QA/QC (dbt tests + optional Great Expectations) |
-| **ml/** | FastAPI: OTU upload, manual train, predict at (lat, lon) |
-| **viz/** | Streamlit: map (Positron), VA parcels & harvest layers |
-| **docker/** | Dockerfiles and Compose for PostGIS, MinIO, ML, viz |
+| **ml/** | FastAPI + Dockerfile: OTU upload, manual train, predict at (lat, lon) |
+| **viz/** | Streamlit + Dockerfile: map (Positron), VA parcels & harvest layers |
+| **docker-compose.yml** | Orchestrates PostGIS, MinIO, Martin, ML, and viz services |
 
 ## Quick start
 
@@ -70,7 +73,7 @@ A **data engineering portfolio project** for predicting soil fungal communities 
 - **ADR-001**: PostGIS as central spatial store.  
 - **ADR-002**: dbt for SQL transformations and testing.  
 - **ADR-003**: Separate ML service with manual retrain trigger.  
-- **ADR-004**: Docker Compose locally; same images for cloud.
+- **ADR-004**: Docker Compose for local development.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/adr/](docs/adr/) for details.
 

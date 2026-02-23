@@ -16,7 +16,7 @@ Scripts and small services that pull data from external sources and load them in
 ## Running
 
 - **Local**: Use Python 3.10+ and a virtualenv; set `DATABASE_URL` and optional `S3_ENDPOINT` (MinIO) for local object store.
-- **Docker**: Ingestion can run as one-off containers or from a scheduler; see `../docker/`.
+- **Docker**: Ingestion can run as one-off containers; see `docker-compose.yml` at the repo root.
 
 ## Conventions
 
