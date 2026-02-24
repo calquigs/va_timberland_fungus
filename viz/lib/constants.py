@@ -23,4 +23,4 @@ HARVEST_POINT = "#3c3c32"
 VA_CENTER = [37.5, -79.0]
 VA_ZOOM = 7
 
-ML_API_URL = "http://localhost:8000"
+API_URL = "http://localhost:8000"

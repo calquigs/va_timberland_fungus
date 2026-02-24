@@ -19,32 +19,36 @@ echo "=== 1. Ingest VA harvest points (VOF) ==="
 python ingestion/va_harvests/ingest_va_harvests.py "$@"
 
 echo ""
-echo "=== 2. Ingest VA parcels (VGIN, bbox of harvest points) ==="
-python ingestion/va_parcels/ingest_va_parcels.py --only-intersecting-harvests "$@"
+echo "=== 2. Ingest VA parcels (only those containing harvest points) ==="
+python ingestion/va_parcels/ingest_va_parcels.py --parcels-containing-harvests "$@"
 
 echo ""
 echo "=== 3. Build harvested timber parcels (spatial join) ==="
 python ingestion/va_parcels/ingest_va_parcels.py --harvested-only --schema staging
 
 echo ""
-echo "=== 4. Compute per-parcel loblolly biomass zonal stats ==="
+echo "=== 4. Download FIA BIGMAP loblolly raster (if not cached) ==="
+python ingestion/fia_bigmap/ingest_fia_loblolly.py
+
+echo ""
+echo "=== 5. Compute per-parcel loblolly biomass zonal stats ==="
 python ingestion/fia_bigmap/ingest_fia_loblolly.py --zonal-stats "$@"
 
 echo ""
-echo "=== 5. Ingest protected lands (VA DCR Conservation Lands) ==="
+echo "=== 6. Ingest protected lands (VA DCR Conservation Lands) ==="
 python ingestion/protected_lands/ingest_dcr_conslands.py "$@"
 
 echo ""
-echo "=== 6. Ingest environmental rasters ==="
+echo "=== 7. Ingest environmental rasters ==="
 python ingestion/environmental/ingest_env_rasters.py "$@"
 
 echo ""
-echo "=== 7. Sample environmental values at parcel centroids ==="
+echo "=== 8. Sample environmental values at parcel centroids ==="
 python ingestion/environmental/ingest_env_rasters.py --skip-download --sample-points
 
 echo ""
-echo "=== 8. Run QA checks ==="
+echo "=== 9. Run QA checks ==="
 python qa/run_checks.py || echo "Some QA checks failed (see above)"
 
 echo ""
-echo "Done. Run 'cd transform && dbt run' to build dbt models."
+echo "Ingestion complete."

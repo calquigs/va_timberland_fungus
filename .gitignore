@@ -27,15 +27,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Debug / test artifacts from development
-page_source.html
-page_screenshot.png
-streamlit_target_page.png
-check_page.py
-check_page_selenium.py
-check_streamlit_page.py
-check_streamlit_selenium.py
-
 # Docker volumes (should not be in repo)
 pgdata/
 minio_data/

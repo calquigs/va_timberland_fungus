@@ -4,7 +4,7 @@ This project is designed to **run locally**. Clone the repo and follow the READM
 
 ## How evaluators access the app
 
-1. **Docker (recommended):** `docker compose up -d postgres && docker compose up ml viz` brings up everything. Map at http://localhost:8502, API at http://localhost:8000.
+1. **Docker (recommended):** `docker compose up -d postgres && docker compose up api viz` brings up everything. Map at http://localhost:8502, API at http://localhost:8000.
 2. **Python venv (viz only):** Install `viz/requirements.txt`, set `DATABASE_URL`, and run `streamlit run app.py` from `viz/`. Requires a running Postgres instance.
 
 ## Data

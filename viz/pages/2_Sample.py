@@ -27,7 +27,7 @@ from sqlalchemy import text
 from streamlit_folium import st_folium
 
 from lib.constants import (
-    ML_API_URL,
+    API_URL,
     POSITRON_ATTR,
     POSITRON_TILES,
     SATELLITE_ATTR,
@@ -40,7 +40,7 @@ from lib.db import get_engine
 st.set_page_config(page_title="Sample | VA Woods", layout="wide")
 st.title("Sample – Environmental Coverage & OTU Sampling")
 
-API_BASE = os.environ.get("ML_API_URL", ML_API_URL)
+API_BASE = os.environ.get("API_URL", API_URL)
 ENV_RASTER_DIR = Path(
     os.environ.get("ENV_RASTER_DIR",
                     Path(__file__).resolve().parents[2] / "data" / "environmental")

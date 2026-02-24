@@ -1,7 +1,7 @@
 """
 CLI wrapper for generating the sampling-gap raster.
 
-The core logic lives in ml/app/gap_raster.py; this script provides a
+The core logic lives in api/app/gap_raster.py; this script provides a
 standalone entry point for running outside Docker.
 
 Usage:
@@ -38,7 +38,7 @@ def main():
 
     env_dir = Path(args.env_dir) if args.env_dir else _default_env_dir()
 
-    sys.path.insert(0, str(_PROJECT_ROOT / "ml"))
+    sys.path.insert(0, str(_PROJECT_ROOT / "api"))
     from app.gap_raster import generate_gap_raster
 
     result = generate_gap_raster(env_dir=env_dir, database_url=args.database_url)

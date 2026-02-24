@@ -144,7 +144,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="VA Woods ML",
+    title="VA Woods API",
     description="Train and predict soil fungal community from environmental variables.",
     version="0.2.0",
     lifespan=lifespan,

@@ -45,7 +45,7 @@ A data engineering portfolio project for **predicting soil fungal communities** 
        │
        ▼
 ┌──────────────────────────────────┬──────────────────────────────────────────┐
-│     ML SERVICE (FastAPI)          │     TILE SERVER (Martin)                  │
+│     API SERVICE (FastAPI)          │     TILE SERVER (Martin)                  │
 │  • OTU upload + storage           │  • Vector tiles (MVT) from PostGIS       │
 │  • XGBoost train (on demand)      │  • Auto-discovers spatial tables         │
 │  • Predict at (lat, lon)          │  • Parcels, harvests, protected lands    │
@@ -71,7 +71,7 @@ A data engineering portfolio project for **predicting soil fungal communities** 
 | **Storage** | Raw + staged + modeled data | PostGIS, MinIO |
 | **Transform** | Parcel classification, biomass overlay, env at points, parameter bounds | dbt (SQL), Python |
 | **QA/QC** | Automated validation | dbt tests, custom Python checks |
-| **ML** | Train XGBoost on OTU + env; predict at (lat, lon); env coverage analysis | FastAPI, XGBoost, scikit-learn |
+| **API** | Train XGBoost on OTU + env; predict at (lat, lon); env coverage analysis | FastAPI, XGBoost, scikit-learn |
 | **Tiles** | Vector tiles for performant map rendering | Martin (MVT from PostGIS) |
 | **Map viz** | Three interactive map views | Streamlit, Folium, streamlit-folium |
 | **Deploy** | Run everything in containers | Docker Compose |
@@ -120,7 +120,7 @@ See `docs/adr/` for:
 
 - **ADR-001**: PostGIS as central spatial store
 - **ADR-002**: dbt for SQL transformations and testing
-- **ADR-003**: Separate ML service with manual retrain trigger
+- **ADR-003**: Separate API service with manual retrain trigger
 - **ADR-004**: Docker Compose for local development
 
 ## Repository Layout
@@ -139,13 +139,13 @@ va_woods/
 │   ├── models/marts/     #   Mart tables
 │   └── macros/           #   SQL macros (simplify_geom)
 ├── qa/                   # QA/QC checks
-├── ml/                   # FastAPI ML service
+├── api/                  # FastAPI API service
 │   └── app/main.py       #   All API endpoints
 ├── viz/                  # Streamlit multipage app
 │   ├── app.py            #   Entry point
 │   ├── pages/            #   Target, Sample, Predict
 │   └── lib/              #   Shared utilities
 ├── scripts/              # Orchestration scripts
-├── docker-compose.yml    # PostGIS, MinIO, Martin, ML, Viz
+├── docker-compose.yml    # PostGIS, MinIO, Martin, API, Viz
 └── README.md
 ```

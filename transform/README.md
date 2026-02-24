@@ -20,4 +20,4 @@ dbt test
 - **Staging**: `stg_va_parcels`, `stg_fia_loblolly` — clean and type raw data.
 - **Marts**: `parcels_classified` (wild vs timber), `env_at_otu_sites` — ready for API and ML.
 
-Classification rules in `parcels_classified` depend on Virginia land-use codes; update the `case` expression when you have the actual code list.
+Classification rules in `parcels_classified` use Virginia land-use codes to distinguish wild parcels from managed timber parcels.

@@ -32,7 +32,7 @@ from streamlit_folium import st_folium
 from lib.constants import (
     HARVEST_POINT,
     HARVESTED_FILL,
-    ML_API_URL,
+    API_URL,
     PARCEL_BORDER,
     POSITRON_ATTR,
     POSITRON_TILES,
@@ -47,7 +47,7 @@ from lib.raster_utils import get_loblolly_overlay
 st.set_page_config(page_title="Target | VA Woods", layout="wide")
 st.title("Target Parcels")
 
-API_BASE = os.environ.get("ML_API_URL", ML_API_URL)
+API_BASE = os.environ.get("API_URL", API_URL)
 TABLE_PAGE_SIZE = 50
 
 _CTRL_RE = re.compile(r"[\x00-\x1f\x7f-\x9f\\]")
@@ -362,6 +362,11 @@ def build_target_map(
     def highlight_fn(_feature):
         return {"weight": 3, "fillOpacity": 0.75}
 
+    ts_cols = gdf.select_dtypes(include=["datetime", "datetimetz"]).columns
+    if len(ts_cols):
+        gdf = gdf.copy()
+        for c in ts_cols:
+            gdf[c] = gdf[c].dt.strftime("%Y-%m-%d").fillna("")
     geojson_data = json.loads(gdf.to_json())
 
     for feature in geojson_data["features"]:

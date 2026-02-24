@@ -1,6 +1,6 @@
-# ML Service
+# API Service
 
-Train a model that predicts soil fungal community (from OTU-derived features) using environmental variables at (lat, lon). Serve predictions for the web app.
+FastAPI backend for VA Woods: OTU upload, model training, predictions, environmental coverage analysis, and parcel management.
 
 ## Endpoints
 
@@ -8,17 +8,22 @@ Train a model that predicts soil fungal community (from OTU-derived features) us
 - **POST /train** — Manually trigger retrain: read OTU sites + env from DB, train model, save artifact.
 - **GET /predict?lat=&lon=** — Return predicted community for the given point (env fetched from DB or computed).
 - **GET /model/status** — Return last trained timestamp and optional metrics.
+- **GET /env/coverage** — Assess parameter-space coverage at a point.
+- **POST /env/refresh-gap-raster** — Regenerate the sampling-gap raster.
+- **POST /parcels/{id}/target** — Mark a parcel as a target.
+- **DELETE /parcels/{id}/target** — Unmark a parcel.
+- **GET /target-parcels** — Paginated GeoJSON of target parcels.
 
 ## Model Design
 
 - **Features**: elevation, slope, precip, temperature (and optionally FIA biomass at point).
-- **Target**: OTU-derived community representation (e.g. diversity index, or composition vector; exact target TBD).
-- **Artifact**: Saved model (e.g. joblib) in volume or object store; loaded at startup or on first predict.
+- **Target**: OTU-derived community representation (e.g. diversity index, or composition vector).
+- **Artifact**: Saved model (joblib) in volume or object store; loaded at startup or on first predict.
 
 ## Running
 
 ```bash
-cd ml
+cd api
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```

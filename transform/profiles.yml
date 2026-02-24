@@ -9,7 +9,7 @@ va_woods:
       host: "{{ env_var('DBT_HOST', 'localhost') }}"
       port: "{{ env_var('DBT_PORT', '5432') | int }}"
       user: "{{ env_var('DBT_USER', 'va_woods') }}"
-      password: "{{ env_var('DBT_PASSWORD', '') }}"
+      password: "{{ env_var('DBT_PASSWORD', 'va_woods_dev') }}"
       dbname: "{{ env_var('DBT_DBNAME', 'va_woods') }}"
       schema: staging
       threads: 4

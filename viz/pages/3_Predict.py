@@ -22,7 +22,7 @@ from sqlalchemy import text
 from streamlit_folium import st_folium
 
 from lib.constants import (
-    ML_API_URL,
+    API_URL,
     POSITRON_ATTR,
     POSITRON_TILES,
     SATELLITE_ATTR,
@@ -35,7 +35,7 @@ from lib.db import get_engine
 st.set_page_config(page_title="Predict | VA Woods", layout="wide")
 st.title("Predict – Fungal Community Composition")
 
-API_BASE = os.environ.get("ML_API_URL", ML_API_URL)
+API_BASE = os.environ.get("API_URL", API_URL)
 
 
 # ---------------------------------------------------------------------------

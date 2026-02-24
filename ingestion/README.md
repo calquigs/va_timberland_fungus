@@ -11,7 +11,7 @@ Scripts and small services that pull data from external sources and load them in
 | Harvested timber parcels | `va_parcels/ --harvested-only` | `staging.va_harvested_timber_parcels` |
 | FIA BIGMAP Loblolly | `fia_bigmap/ingest_fia_loblolly.py` | Download zip from USDA + extract GeoTIFF; optional `--local-zip` if manual download |
 | Environmental (DEM, PRISM) | `environmental/` | Rasters in object store; env-at-point table in PostGIS |
-| OTU tables | API in `../ml` or dedicated `otu_upload/` | Object store + PostGIS metadata |
+| OTU tables | API in `../api` (POST `/upload/otu`) | Object store + PostGIS metadata |
 
 ## Running
 

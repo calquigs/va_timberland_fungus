@@ -10,69 +10,76 @@ A **data engineering portfolio project** for predicting soil fungal communities 
 
 ## For evaluators (quick access)
 
-**Prerequisites:** Docker & Docker Compose, Git. Optional: Python 3.10+ for running ingestion/dbt/viz outside Docker.
+**Prerequisites:** Docker & Docker Compose, Python 3.10+, Git.
+On Linux you may also need system GDAL (`sudo apt install libgdal-dev`); macOS and most pip binary wheels include it automatically.
+
+### Full setup (data + app) — one script
 
 ```bash
-git clone <repo-url> && cd va_woods
-docker compose up -d postgres && docker compose up ml viz
+git clone https://github.com/calquigs/va_timberland_fungus.git && cd va_timberland_fungus
+./scripts/setup.sh
 ```
 
-Then open: **Map** http://localhost:8502 · **API** http://localhost:8000
+This starts Postgres, downloads and ingests all data sources, runs dbt, and launches the app. The first run downloads ~5 GB of raster data and takes 15–30 minutes; subsequent runs are fast (data is cached locally).
 
-Ingestion + dbt are optional; without them the UI runs but parcel layers and derived tables will be empty. See Quick start below for details.
+Once running, open: **Map** http://localhost:8502 · **API** http://localhost:8000
+
+### Quick look (app only, empty DB)
+
+```bash
+docker compose up -d postgres && docker compose up api viz
+```
+
+The app starts immediately but map layers will be empty until ingestion and dbt are run.
 
 ## Repository layout
 
 | Path | Purpose |
 |------|--------|
 | **docs/** | [Architecture](docs/ARCHITECTURE.md), [ADRs](docs/adr/), [data sources](docs/DATA_SOURCES.md) |
-| **ingestion/** | Scripts: VA parcels, FIA BIGMAP, environmental rasters; OTU upload is in ML API |
+| **ingestion/** | Scripts: VA parcels, FIA BIGMAP, environmental rasters; OTU upload is in the API |
 | **transform/** | dbt: staging + marts (parcels classified, env at OTU sites) |
-| **qa/** | Automated QA/QC (dbt tests + optional Great Expectations) |
-| **ml/** | FastAPI + Dockerfile: OTU upload, manual train, predict at (lat, lon) |
+| **qa/** | Automated QA/QC (dbt tests + custom Python checks) |
+| **api/** | FastAPI + Dockerfile: OTU upload, model training, predictions, env coverage |
 | **viz/** | Streamlit + Dockerfile: map (Positron), VA parcels & harvest layers |
-| **docker-compose.yml** | Orchestrates PostGIS, MinIO, Martin, ML, and viz services |
+| **scripts/** | `setup.sh` (full pipeline), `ingest_va_landuse.sh` (ingestion only) |
+| **docker-compose.yml** | Orchestrates PostGIS, MinIO, Martin, API, and viz services |
 
-## Quick start
+## Step-by-step (manual)
 
-1. **Start backend and DB**
+If you prefer to run each stage individually:
+
+1. **Start Postgres**
    ```bash
    docker compose up -d postgres minio
-   export DATABASE_URL=postgresql://va_woods:va_woods_dev@localhost:5432/va_woods
    ```
 
-2. **Ingestion** (implement and run when data sources are configured)
+2. **Ingest data** (downloads from VA, USFS, and PRISM APIs; ~15–30 min first run)
    ```bash
-   cd ingestion && pip install -r requirements.txt
-   python va_parcels/ingest_va_parcels.py
-   python fia_bigmap/ingest_fia_loblolly.py
-   python environmental/ingest_env_rasters.py
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install -r ingestion/requirements.txt
+   ./scripts/ingest_va_landuse.sh
    ```
 
-3. **Transform**
+3. **Transform (dbt)**
    ```bash
-   cd transform && pip install dbt-postgres
+   pip install dbt-postgres
    export DBT_HOST=localhost DBT_USER=va_woods DBT_PASSWORD=va_woods_dev DBT_DBNAME=va_woods
-   dbt run && dbt test
+   cd transform && dbt run && dbt test && cd ..
    ```
 
-4. **ML API + Map viz**
+4. **Launch the app**
    ```bash
-   docker compose up ml viz
+   docker compose up api viz
    ```
-   - API: http://localhost:8000  
-   - Map: http://localhost:8502 (Streamlit)
-
-   Or run the viz locally (no Docker):
-   ```bash
-   cd viz && pip install -r requirements.txt && export DATABASE_URL=postgresql://va_woods:va_woods_dev@localhost:5432/va_woods && streamlit run app.py
-   ```  
+   - Map: http://localhost:8502
+   - API: http://localhost:8000
 
 ## Architecture decisions
 
 - **ADR-001**: PostGIS as central spatial store.  
 - **ADR-002**: dbt for SQL transformations and testing.  
-- **ADR-003**: Separate ML service with manual retrain trigger.  
+- **ADR-003**: Separate API service with manual retrain trigger.  
 - **ADR-004**: Docker Compose for local development.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/adr/](docs/adr/) for details.
@@ -82,10 +89,10 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/adr/](docs/adr/) for 
 - **Virginia parcels**: State GIS / open data → wild vs timber classification.  
 - **FIA BIGMAP**: Loblolly Pine biomass.  
 - **Environmental**: Elevation, slope, precipitation, temperature (e.g. DEM + PRISM).  
-- **OTU tables**: User uploads (CSV/TSV + lat/lon) via ML API.
+- **OTU tables**: User uploads (CSV/TSV + lat/lon) via API.
 
 See [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
 ## License
 
-Portfolio / educational use. Respect data providers’ terms (Virginia, USFS, PRISM, etc.).
+MIT — see [LICENSE](LICENSE). Data sourced from Virginia state agencies, USFS FIA, and PRISM is subject to the respective providers’ terms of use.

@@ -10,7 +10,7 @@ We need to train a model (OTU-derived community vs environmental variables) and 
 
 ## Decision
 
-- **Separate ML service** (e.g. FastAPI): endpoints for `POST /train` (manual trigger), `GET /predict?lat=&lon=`, and optionally `GET /model/status`.
+- **Separate API service** (FastAPI): endpoints for `POST /train` (manual trigger), `GET /predict?lat=&lon=`, and optionally `GET /model/status`.
 - **Manual retrain**: No automatic retraining on upload; user or operator triggers retrain (e.g. button in app or CLI). Training reads: OTU samples + env features from DB (or exported snapshot), trains model, saves artifact (e.g. joblib) to object store or mounted volume.
 - **Prediction**: Load model; for given (lat, lon), fetch or compute env features (from API or DB), run model, return predicted community (e.g. composition or diversity metrics).
 
