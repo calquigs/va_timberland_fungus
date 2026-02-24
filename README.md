@@ -1,6 +1,6 @@
 # VA Woods
 
-A **data engineering portfolio project** for predicting soil fungal communities to support inoculation of depleted forest lands in Virginia. The pipeline ingests spatial data (Virginia parcels, USFS FIA Loblolly biomass, environmental rasters), classifies parcels (wild vs timber), and trains a model on user-uploaded OTU tables + environmental variables. A web app lets you click the map to get a predicted fungal community at any point.
+A **data engineering portfolio project** for predicting soil fungal communities to support inoculation of timberlands in Virginia. The pipeline ingests spatial data (Virginia parcels, USFS FIA Loblolly Pine biomass, environmental rasters), classifies parcels (land with active timber harvests and protected lands with healthy forests), and trains a gradient boosted regression model on user-uploaded OTU tables + environmental variables. A web app lets you click the map to predict fungal community at any point using environmental data.
 
 ## Goals
 
@@ -8,7 +8,7 @@ A **data engineering portfolio project** for predicting soil fungal communities 
 - **Spatial + ML**: Parcels, FIA overlay, env vars; OTU uploads; manual retrain; predict at (lat, lon).
 - **Local-first**: Docker Compose to run the full stack on your machine.
 
-## For evaluators (quick access)
+## Install
 
 **Prerequisites:** Docker & Docker Compose, Python 3.10+, Git.
 On Linux you may also need system GDAL (`sudo apt install libgdal-dev`); macOS and most pip binary wheels include it automatically.
