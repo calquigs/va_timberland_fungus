@@ -2,6 +2,12 @@
 
 A **data engineering portfolio project** for predicting soil fungal communities to support inoculation of timberlands in Virginia. The pipeline ingests spatial data (Virginia parcels, USFS FIA Loblolly Pine biomass, environmental rasters), classifies parcels (land with active timber harvests and protected lands with healthy forests), and trains a gradient boosted regression model on user-uploaded OTU tables + environmental variables. A web app lets you click the map to predict fungal community at any point using environmental data.
 
+
+<img src="/docs/target.png" width="1000"/>
+<img src="/docs/sample.png" width="1000"/>
+<img src="/docs/predict.png" width="1000"/>
+
+
 ## Goals
 
 - **Data engineering**: Extract → Transform (SQL + Python + dbt) → QA/QC → Serve.
